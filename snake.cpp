@@ -10,8 +10,8 @@
 #define ESC 27
 
 int body[200][2];
-int n = 1;
-int long_body = 13;
+int long_body = 3;
+int aux = 1;
 int x = 10;
 int y = 12;
 int dir = 3;
@@ -20,7 +20,7 @@ int yFeed = 15;
 int velocity = 100;
 int h = 1;
 int score = 0;
-char tecla;
+char key;
 
 void gotoxy(int x, int y)
 {
@@ -33,7 +33,7 @@ void gotoxy(int x, int y)
 }
 
 // Función para ocultar el cursor de la terminal
-void OcultarCursor(){
+void hide_cursor(){
     HANDLE hCon;
     hCon = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cci;
@@ -43,7 +43,7 @@ void OcultarCursor(){
 }
 
 // Dibuja los limites del juego
-void pintar_limites()
+void print_limits()
 {
     // Horizontales:
     for (int i = 2; i < 78; i++){
@@ -63,12 +63,12 @@ void pintar_limites()
 }
 
 void save_position(){
-    body[n][0] = x;
-    body[n][1] = y;
-    n++;
-    if (n == long_body)
+    body[aux][0] = x;
+    body[aux][1] = y;
+    aux++;
+    if (aux == long_body)
     {
-        n = 1;
+        aux = 1;
     }
 }
 
@@ -81,15 +81,15 @@ void print_body(){
 }
 
 void delete_body(){
-    gotoxy(body[n][0], body[n][1]);
+    gotoxy(body[aux][0], body[aux][1]);
     printf(" ");
 }
 
 void move(){
         if (kbhit())
     {
-        tecla = getch();
-        switch (tecla)
+        key = getch();
+        switch (key)
         {
         case UP:
             if (dir != 2)
@@ -151,21 +151,19 @@ void print_score(){
     gotoxy(3, 1); printf("SCORE %d", score);
 }
 
-int main(int argc, char const *argv[])
-{
+void game_start_screen(){
+    print_limits();
+    hide_cursor();
+    gotoxy(xFeed, yFeed); printf("%c", 4);
+} 
 
-pintar_limites();
-OcultarCursor();
-gotoxy(xFeed, yFeed); printf("%c", 4);
-
-while(tecla != ESC && game_over()){
+void run_game(){
     delete_body();
     save_position();
     print_body();
     feed();
     print_score();
-    move();
-    move();
+    move(); move();
     
     if (dir == 1) y--;
     if (dir == 2) y++;
@@ -175,10 +173,15 @@ while(tecla != ESC && game_over()){
     Sleep(velocity);
 }
 
-    
+int main(int argc, char const *argv[]){
 
-    
-    
+    game_start_screen();
+
+    while(key != ESC && game_over()){
+        run_game();
+    }
+
+    gotoxy(35,16); printf("GAME OVER");
     getch();
     return 0;
 }
