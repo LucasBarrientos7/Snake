@@ -1,14 +1,17 @@
+// Librerias:
 #include <windows.h>
 #include <iostream>
 #include <conio.h>
 #include <stdio.h>
 
+// Definición de teclas:
 #define UP 72
 #define LEFT 75
 #define RIGHT 77
 #define DOWN 80
 #define ESC 27
 
+// Variables:
 int body[200][2];
 int long_body = 3;
 int aux = 1;
@@ -22,6 +25,7 @@ int h = 1;
 int score = 0;
 char key;
 
+// Permite manipular la posición en la pantalla.
 void gotoxy(int x, int y)
 {
     HANDLE hCon;
@@ -32,7 +36,7 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(hCon, dwPos);
 }
 
-// Función para ocultar el cursor de la terminal
+// Función para ocultar el cursor de la terminal.
 void hide_cursor(){
     HANDLE hCon;
     hCon = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -42,7 +46,7 @@ void hide_cursor(){
     SetConsoleCursorInfo(hCon, &cci);
 }
 
-// Dibuja los limites del juego
+// Dibuja los limites del juego.
 void print_limits()
 {
     // Horizontales:
@@ -62,6 +66,7 @@ void print_limits()
     gotoxy(77, 23); printf("%c", 188);
 }
 
+// Guarda la posicion del cuerpo de la vivora.
 void save_position(){
     body[aux][0] = x;
     body[aux][1] = y;
@@ -72,6 +77,7 @@ void save_position(){
     }
 }
 
+// Imprime en pantalla el cuerpo de la vivora.
 void print_body(){
     for (int i = 1; i < long_body; i++)
     {
@@ -80,11 +86,13 @@ void print_body(){
     }
 }
 
+// Borra el camino dejado por la vivora cuando avanza.
 void delete_body(){
     gotoxy(body[aux][0], body[aux][1]);
     printf(" ");
 }
 
+// Funcion para configurar las teclas de la vivora.
 void move(){
         if (kbhit())
     {
@@ -114,6 +122,7 @@ void move(){
     }
 }
 
+// Modifica la velocidad a medida que avanza el juego.
 void change_velocity(){
     if (score == h*20)
     {
@@ -122,6 +131,7 @@ void change_velocity(){
     } 
 }
 
+// Funcion que proporciona el alimento de la vivora en pantalla.
 void feed(){
     if (x == xFeed && y == yFeed)
     {
@@ -135,6 +145,7 @@ void feed(){
     }
 }
 
+// Determina si la vivora colisionó con los limites de la pantalla o consigo misma.
 bool game_over(){
     if (y == 3 || y == 23 || x == 2 || x == 77){
         return false;
@@ -147,16 +158,19 @@ bool game_over(){
     return true;
 }
 
+// Imprime en pantalla el puntaje obtenido.
 void print_score(){
     gotoxy(3, 1); printf("SCORE %d", score);
 }
 
+// Inicializa los elementos del juego.
 void game_start_screen(){
     print_limits();
     hide_cursor();
     gotoxy(xFeed, yFeed); printf("%c", 4);
 } 
 
+// Inicializa las funciones centrales del juego.
 void run_game(){
     delete_body();
     save_position();
@@ -173,6 +187,7 @@ void run_game(){
     Sleep(velocity);
 }
 
+// Funcion principal.
 int main(int argc, char const *argv[]){
 
     game_start_screen();
