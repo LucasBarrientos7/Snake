@@ -76,7 +76,7 @@ void print_body(){
     for (int i = 1; i < long_body; i++)
     {
         gotoxy(body[i][0], body[i][1]);
-        printf("*");
+        printf("%c", 207);
     }
 }
 
